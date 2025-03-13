@@ -22,6 +22,8 @@ def unit_test():
 
     # TODO: Test selling a non-existent product (e.g., 'grape') and check behavior.
     # For example, it should return "Insufficient stock" or similar.
+    result = sell_product('the fish', 1)
+    assert result == "Insufficient stock", "wait a second WE HAVE NO FISH"
 
 # -------------------------------------------
 # Integration Testing
