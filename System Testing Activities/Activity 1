@@ -1,0 +1,2 @@
+Unit, integration, and system testing all test the specifications and functions of software and ensure they are of high quality and function without errors.
+Unit testing tests individual functions, integration testing combines different functions or modules and test how they interact, and system testing tests the entire system, ensuring everything works together.
