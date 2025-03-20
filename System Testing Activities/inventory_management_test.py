@@ -1,5 +1,4 @@
-# management_test.py
-from inventory_management import add_product, sell_product, check_availability, total_inventory_value
+from inventory_management import *
 
 # -------------------------------------------
 # Unit Testing
@@ -13,23 +12,29 @@ def unit_test():
 
     # Test selling products
     result = sell_product('apple', 10)
-    assert result is None, f"Expected None but got {result}"  # No error should occur
-    assert check_availability('apple') == 60, "Apple stock should be 60 after selling 10."
+    assert result is None, f"Expected None but got {result}"
+    assert check_availability('apple') == 40, "Apple stock should be 40 after selling 10."
 
-    # Test insufficient stock
-    result = sell_product('banana', 40)  # Trying to sell more than available
-    assert result == "Insufficient stock", "Expected 'Insufficient stock' error message."
+    # Test insufficient stock. Trying to sell more than available - if you sell more than 20, this SHOULD NOT present an error.
+    result = sell_product('banana', 200)  # Selling 200 should not raise an error - if it does, the sell_product function needs fixing.
+    assert result == "Insufficient stock", f"Expected 'Insufficient stock' but got {result}."
 
     # TODO: Test selling a non-existent product (e.g., 'grape') and check behavior.
     # For example, it should return "Insufficient stock" or similar.
-    result = sell_product('the fish', 1)
-    assert result == "Insufficient stock", "wait a second WE HAVE NO FISH"
+
+    result = sell_product('evil banana', 666)
+    assert result == "Insufficient stock", "No."
+
+    print('\nUnit Test Result - Working fine!')
 
 # -------------------------------------------
 # Integration Testing
 # -------------------------------------------
 def integration_test():
     """Test how different functions from the Inventory Management module work together."""
+
+    inventory['apple'] = 0
+    inventory['banana'] = 0
     
     # Add products to inventory
     add_product('apple', 50)
@@ -46,18 +51,24 @@ def integration_test():
     # Print results for verification
     print("\n----- Integration Test Results -----")
     print(f"Apple stock after sale: {apple_stock} (Expected: 40)")  # 50 - 10
+
     print(f"Banana stock after sale: {banana_stock} (Expected: 25)")  # 30 - 5
 
     # TODO: Test checking availability of a non-existent product (e.g., 'mango', should return 0).
+    evil_banana_stock = check_availability('evil banana')
+    print(f"Evil Banana stock after sale: {evil_banana_stock} (Expected: ZERO.)")
     
     # TODO: Test total inventory value after sales
-    print(f"Total inventory value: {total_inventory_value()} (Expected: 70)")
+    print(f"Total inventory value: {total_inventory_value()} (Expected: 52.5)") # (40 * 1.0) + (25 * 0.5)
 
 # -------------------------------------------
 # System Testing
 # -------------------------------------------
 def system_test():
     """Test the system as a whole."""
+
+    inventory['apple'] = 0
+    inventory['banana'] = 0
     
     # Run through the entire process: adding, selling, checking availability
     add_product('apple', 50)
@@ -68,21 +79,31 @@ def system_test():
     # Check final availability and inventory value
     apple_stock = check_availability('apple')
     banana_stock = check_availability('banana')
+    evil_banana_stock = check_availability('evil banana')
     inventory_value = total_inventory_value()
 
     print("\n----- System Test Results -----")
     print(f"Apple stock: {apple_stock} (Expected: 40)")  # 50 - 10
     print(f"Banana stock: {banana_stock} (Expected: 25)")  # 30 - 5
-    print(f"Total inventory value: {inventory_value} (Expected: 70)")  # (40 * 1.0) + (25 * 0.5)
+    print(f"Evil Banana stock: {evil_banana_stock} (Expected: NONE.)")
+    print(f"Total inventory value: {inventory_value} (Expected: 52.5)")  # (40 * 1.0) + (25 * 0.5)
     
     # TODO: Add tests for boundary conditions such as no stock or empty inventory.
     # For example, check if the inventory value is 0 when no products exist.
+
+    print('\nSetting all stock to zero...')
+    inventory['apple'] = 0
+    inventory['banana'] = 0
+
+    print('Updating inventory value...')
+    inventory_value = total_inventory_value()
+    print(f"Total inventory value: {inventory_value} (Expected: 0)")
 
 # -------------------------------------------
 # Running the Tests
 # -------------------------------------------
 if __name__ == "__main__":
-    # Run all tests
+    # Run all tests - UNCOMMENT EACH FUNCTION ONE AT A TIME!
     print("Running Unit Test...")
     unit_test()
 
